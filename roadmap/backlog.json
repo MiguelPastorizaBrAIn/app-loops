@@ -1,0 +1,591 @@
+{
+  "meta": {
+    "projectTitle": "App Loops · Automatizaciones IA",
+    "projectDescription": "Portfolio de iniciativas, épicas e historias de usuario para construir automatizaciones con IA",
+    "owner": "MiguelPastorizaBrAIn",
+    "repo": "app-loops",
+    "roadmapStart": "2026-09-18"
+  },
+  "labels": [
+    { "name": "type:initiative", "color": "5319e7", "description": "Iniciativa estratégica (trimestre)" },
+    { "name": "type:epic", "color": "3e4b9e", "description": "Épica dentro de una iniciativa" },
+    { "name": "type:story", "color": "0e8a16", "description": "Historia de usuario" },
+    { "name": "type:task", "color": "c2e0c6", "description": "Tarea técnica" },
+    { "name": "type:bug", "color": "d73a4a", "description": "Defecto" },
+    { "name": "type:spike", "color": "fbca04", "description": "Investigación técnica" },
+    { "name": "priority:P0", "color": "b60205", "description": "Crítica" },
+    { "name": "priority:P1", "color": "d93f0b", "description": "Alta" },
+    { "name": "priority:P2", "color": "fbca04", "description": "Media" },
+    { "name": "priority:P3", "color": "0e8a16", "description": "Baja" },
+    { "name": "horizon:now", "color": "1d76db", "description": "Ahora" },
+    { "name": "horizon:next", "color": "5319e7", "description": "Siguiente" },
+    { "name": "horizon:later", "color": "c5def5", "description": "Después" },
+    { "name": "area:platform", "color": "bfd4f2", "description": "Plataforma y arquitectura" },
+    { "name": "area:ai-engine", "color": "d4c5f9", "description": "Motor de IA" },
+    { "name": "area:integrations", "color": "c2e0c6", "description": "Integraciones y conectores" },
+    { "name": "area:observability", "color": "fef2c0", "description": "Observabilidad y calidad" },
+    { "name": "area:security", "color": "e99695", "description": "Seguridad y cumplimiento" },
+    { "name": "area:product", "color": "f9d0c4", "description": "Producto y experiencia" },
+    { "name": "area:docs", "color": "d4c5f9", "description": "Documentación" }
+  ],
+  "fields": {
+    "tipo": {
+      "name": "Tipo",
+      "dataType": "SINGLE_SELECT",
+      "options": [
+        { "name": "Iniciativa", "color": "PURPLE" },
+        { "name": "Épica", "color": "BLUE" },
+        { "name": "Historia de Usuario", "color": "GREEN" },
+        { "name": "Tarea", "color": "GRAY" },
+        { "name": "Bug", "color": "RED" },
+        { "name": "Spike", "color": "YELLOW" }
+      ]
+    },
+    "estado": {
+      "name": "Estado",
+      "dataType": "SINGLE_SELECT",
+      "options": [
+        { "name": "Backlog", "color": "GRAY" },
+        { "name": "Listo", "color": "BLUE" },
+        { "name": "En progreso", "color": "YELLOW" },
+        { "name": "En revisión", "color": "PURPLE" },
+        { "name": "Bloqueado", "color": "RED" },
+        { "name": "Hecho", "color": "GREEN" }
+      ]
+    },
+    "prioridad": {
+      "name": "Prioridad",
+      "dataType": "SINGLE_SELECT",
+      "options": [
+        { "name": "P0 - Crítica", "color": "RED" },
+        { "name": "P1 - Alta", "color": "ORANGE" },
+        { "name": "P2 - Media", "color": "YELLOW" },
+        { "name": "P3 - Baja", "color": "GREEN" }
+      ]
+    },
+    "horizonte": {
+      "name": "Horizonte",
+      "dataType": "SINGLE_SELECT",
+      "options": [
+        { "name": "Ahora", "color": "BLUE" },
+        { "name": "Siguiente", "color": "PURPLE" },
+        { "name": "Después", "color": "GRAY" }
+      ]
+    },
+    "esfuerzo": {
+      "name": "Esfuerzo",
+      "dataType": "SINGLE_SELECT",
+      "options": [
+        { "name": "XS", "color": "GREEN" },
+        { "name": "S", "color": "BLUE" },
+        { "name": "M", "color": "YELLOW" },
+        { "name": "L", "color": "ORANGE" },
+        { "name": "XL", "color": "RED" }
+      ]
+    },
+    "iniciativa": { "name": "Iniciativa", "dataType": "TEXT" },
+    "inicio": { "name": "Inicio", "dataType": "DATE" },
+    "objetivo": { "name": "Fecha objetivo", "dataType": "DATE" }
+  },
+  "milestones": [
+    { "key": "M0", "title": "M0 · Fundación", "due": "2026-10-15", "description": "Base técnica: repo, CI/CD, entornos" },
+    { "key": "M1", "title": "M1 · Motor IA MVP", "due": "2026-11-30", "description": "Orquestador y capa de modelos IA" },
+    { "key": "M2", "title": "M2 · Integraciones", "due": "2026-12-31", "description": "Conectores y SDK" },
+    { "key": "M3", "title": "M3 · Observabilidad y Calidad", "due": "2027-01-31", "description": "Trazas, métricas, seguridad y testing" },
+    { "key": "M4", "title": "M4 · Producto Beta", "due": "2027-03-31", "description": "UX, onboarding y documentación" }
+  ],
+  "initiatives": [
+    {
+      "key": "INIT-1",
+      "title": "INIT-1 · Fundación de la Plataforma",
+      "description": "Establecer la base técnica sobre la que se construirán todas las automatizaciones.",
+      "milestone": "M0",
+      "horizon": "Ahora",
+      "priority": "P1 - Alta",
+      "start": "2026-09-18",
+      "target": "2026-10-15",
+      "labels": ["type:initiative", "area:platform", "horizon:now"],
+      "epics": [
+        {
+          "key": "EPIC-1.1",
+          "title": "EPIC-1.1 · Arquitectura y repositorio",
+          "description": "Definir la arquitectura y las convenciones del proyecto.",
+          "priority": "P1 - Alta",
+          "labels": ["type:epic", "area:platform"],
+          "stories": [
+            {
+              "key": "US-1.1.1",
+              "title": "US-1.1.1 · Estructura del repositorio y convenciones",
+              "as_a": "desarrollador",
+              "i_want": "una estructura de repositorio clara con convenciones definidas",
+              "so_that": "pueda añadir código sin fricción",
+              "priority": "P1 - Alta",
+              "estimate": 3,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Estructura de carpetas documentada", "Convenciones de nombres y commits", "README de contribución"]
+            },
+            {
+              "key": "US-1.1.2",
+              "title": "US-1.1.2 · Entornos y configuración",
+              "as_a": "desarrollador",
+              "i_want": "gestionar configuración por entorno (dev/staging/prod)",
+              "so_that": "pueda desplegar sin cambios manuales",
+              "priority": "P1 - Alta",
+              "estimate": 3,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Variables por entorno", "Secretos fuera del repo", "Documentación de arranque"]
+            },
+            {
+              "key": "US-1.1.3",
+              "title": "US-1.1.3 · Flujo de ramas y versionado",
+              "as_a": "desarrollador",
+              "i_want": "un flujo de ramas y versionado semántico",
+              "so_that": "los cambios sean trazables",
+              "priority": "P2 - Media",
+              "estimate": 2,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Estrategia de ramas documentada", "Versionado semántico", "Plantilla de PR"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-1.2",
+          "title": "EPIC-1.2 · CI/CD y calidad base",
+          "description": "Automatizar integración, validación y despliegue.",
+          "priority": "P1 - Alta",
+          "labels": ["type:epic", "area:platform"],
+          "stories": [
+            {
+              "key": "US-1.2.1",
+              "title": "US-1.2.1 · Pipeline de integración continua",
+              "as_a": "desarrollador",
+              "i_want": "un pipeline que valide cada push",
+              "so_that": "detecte errores pronto",
+              "priority": "P1 - Alta",
+              "estimate": 3,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Workflow de CI", "Ejecuta tests", "Bloquea merge si falla"]
+            },
+            {
+              "key": "US-1.2.2",
+              "title": "US-1.2.2 · Análisis estático y formateo",
+              "as_a": "desarrollador",
+              "i_want": "linters y formateadores automáticos",
+              "so_that": "el código sea consistente",
+              "priority": "P2 - Media",
+              "estimate": 2,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Linter configurado", "Formateo automático", "Pre-commit hooks"]
+            },
+            {
+              "key": "US-1.2.3",
+              "title": "US-1.2.3 · Despliegue automatizado a staging",
+              "as_a": "desarrollador",
+              "i_want": "desplegar a staging automáticamente",
+              "so_that": "pueda validar cambios reales",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:platform"],
+              "acceptance": ["Deploy en merge a main", "URL de staging", "Rollback documentado"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "INIT-2",
+      "title": "INIT-2 · Motor de Automatizaciones con IA",
+      "description": "Construir el núcleo que ejecuta automatizaciones impulsadas por modelos de IA.",
+      "milestone": "M1",
+      "horizon": "Siguiente",
+      "priority": "P0 - Crítica",
+      "start": "2026-10-16",
+      "target": "2026-11-30",
+      "labels": ["type:initiative", "area:ai-engine", "horizon:next"],
+      "epics": [
+        {
+          "key": "EPIC-2.1",
+          "title": "EPIC-2.1 · Orquestador de automatizaciones",
+          "description": "Ejecutar flujos definidos como pasos.",
+          "priority": "P0 - Crítica",
+          "labels": ["type:epic", "area:ai-engine"],
+          "stories": [
+            {
+              "key": "US-2.1.1",
+              "title": "US-2.1.1 · Definir DSL de automatización",
+              "as_a": "autor de automatizaciones",
+              "i_want": "definir flujos en un formato simple",
+              "so_that": "pueda crear automatizaciones sin programar demasiado",
+              "priority": "P0 - Crítica",
+              "estimate": 5,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Esquema del DSL", "Validación de flujos", "Ejemplos"]
+            },
+            {
+              "key": "US-2.1.2",
+              "title": "US-2.1.2 · Ejecutar flujos paso a paso",
+              "as_a": "usuario",
+              "i_want": "que el orquestador ejecute pasos en orden",
+              "so_that": "las automatizaciones funcionen",
+              "priority": "P0 - Crítica",
+              "estimate": 8,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Ejecución secuencial", "Estado por paso", "Logs por ejecución"]
+            },
+            {
+              "key": "US-2.1.3",
+              "title": "US-2.1.3 · Reintentos y manejo de errores",
+              "as_a": "usuario",
+              "i_want": "reintentos y captura de errores",
+              "so_that": "los fallos transitorios se recuperen solos",
+              "priority": "P1 - Alta",
+              "estimate": 5,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Política de reintentos", "Dead-letter", "Alertas de fallo"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-2.2",
+          "title": "EPIC-2.2 · Capa de modelos IA",
+          "description": "Abstraer proveedores LLM y controlar costes.",
+          "priority": "P0 - Crítica",
+          "labels": ["type:epic", "area:ai-engine"],
+          "stories": [
+            {
+              "key": "US-2.2.1",
+              "title": "US-2.2.1 · Abstracción de proveedores LLM",
+              "as_a": "desarrollador",
+              "i_want": "una interfaz común para varios proveedores",
+              "so_that": "pueda cambiar de modelo sin reescribir",
+              "priority": "P0 - Crítica",
+              "estimate": 8,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Interfaz común", "Adaptadores por proveedor", "Config por defecto"]
+            },
+            {
+              "key": "US-2.2.2",
+              "title": "US-2.2.2 · Plantillas de prompts versionadas",
+              "as_a": "autor",
+              "i_want": "versionar prompts",
+              "so_that": "pueda iterar y comparar resultados",
+              "priority": "P1 - Alta",
+              "estimate": 5,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Almacén de prompts", "Versionado", "A/B de prompts"]
+            },
+            {
+              "key": "US-2.2.3",
+              "title": "US-2.2.3 · Control de coste y tokens",
+              "as_a": "propietario",
+              "i_want": "medir y limitar el consumo de tokens",
+              "so_that": "no haya sorpresas de coste",
+              "priority": "P1 - Alta",
+              "estimate": 5,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Métricas de tokens", "Límites por flujo", "Alertas de coste"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-2.3",
+          "title": "EPIC-2.3 · Memoria y contexto",
+          "description": "Dar contexto persistente a las automatizaciones.",
+          "priority": "P2 - Media",
+          "labels": ["type:epic", "area:ai-engine"],
+          "stories": [
+            {
+              "key": "US-2.3.1",
+              "title": "US-2.3.1 · Almacén de contexto por flujo",
+              "as_a": "usuario",
+              "i_want": "guardar contexto entre pasos",
+              "so_that": "la automatización recuerde información",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Store de contexto", "Lectura/escritura por paso", "TTL configurable"]
+            },
+            {
+              "key": "US-2.3.2",
+              "title": "US-2.3.2 · Búsqueda semántica",
+              "as_a": "usuario",
+              "i_want": "recuperar información relevante por similitud",
+              "so_that": "las respuestas usen contexto correcto",
+              "priority": "P2 - Media",
+              "estimate": 8,
+              "labels": ["type:story", "area:ai-engine"],
+              "acceptance": ["Indexado vectorial", "Consulta por similitud", "Evaluación de precisión"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "INIT-3",
+      "title": "INIT-3 · Biblioteca de Integraciones",
+      "description": "Conectar las automatizaciones con servicios externos mediante conectores reutilizables.",
+      "milestone": "M2",
+      "horizon": "Siguiente",
+      "priority": "P1 - Alta",
+      "start": "2026-12-01",
+      "target": "2026-12-31",
+      "labels": ["type:initiative", "area:integrations", "horizon:next"],
+      "epics": [
+        {
+          "key": "EPIC-3.1",
+          "title": "EPIC-3.1 · Conectores base",
+          "description": "Conectores esenciales para casos de uso comunes.",
+          "priority": "P1 - Alta",
+          "labels": ["type:epic", "area:integrations"],
+          "stories": [
+            {
+              "key": "US-3.1.1",
+              "title": "US-3.1.1 · Conector HTTP genérico",
+              "as_a": "usuario",
+              "i_want": "llamar APIs HTTP arbitrarias",
+              "so_that": "integre servicios sin conector dedicado",
+              "priority": "P1 - Alta",
+              "estimate": 3,
+              "labels": ["type:story", "area:integrations"],
+              "acceptance": ["Soporte GET/POST", "Autenticación configurable", "Manejo de errores"]
+            },
+            {
+              "key": "US-3.1.2",
+              "title": "US-3.1.2 · Conector de correo",
+              "as_a": "usuario",
+              "i_want": "enviar y leer correo",
+              "so_that": "automatice notificaciones",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:integrations"],
+              "acceptance": ["Envío de correo", "Lectura de bandeja", "Plantillas"]
+            },
+            {
+              "key": "US-3.1.3",
+              "title": "US-3.1.3 · Conector de almacenamiento",
+              "as_a": "usuario",
+              "i_want": "leer y escribir archivos",
+              "so_that": "gestione documentos en flujos",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:integrations"],
+              "acceptance": ["Subida/descarga", "Listado", "Permisos"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-3.2",
+          "title": "EPIC-3.2 · Catálogo y SDK",
+          "description": "Permitir crear y descubrir conectores.",
+          "priority": "P2 - Media",
+          "labels": ["type:epic", "area:integrations"],
+          "stories": [
+            {
+              "key": "US-3.2.1",
+              "title": "US-3.2.1 · SDK para crear conectores",
+              "as_a": "desarrollador",
+              "i_want": "un SDK para crear conectores",
+              "so_that": "amplíe la biblioteca rápido",
+              "priority": "P2 - Media",
+              "estimate": 8,
+              "labels": ["type:story", "area:integrations"],
+              "acceptance": ["Interfaz de conector", "Plantilla de scaffolding", "Ejemplo funcional"]
+            },
+            {
+              "key": "US-3.2.2",
+              "title": "US-3.2.2 · Catálogo de conectores",
+              "as_a": "usuario",
+              "i_want": "explorar conectores disponibles",
+              "so_that": "encuentre el adecuado",
+              "priority": "P3 - Baja",
+              "estimate": 3,
+              "labels": ["type:story", "area:integrations"],
+              "acceptance": ["Listado del catálogo", "Búsqueda", "Fichas de conector"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "INIT-4",
+      "title": "INIT-4 · Observabilidad, Calidad y Seguridad",
+      "description": "Hacer el sistema fiable, auditable y seguro.",
+      "milestone": "M3",
+      "horizon": "Después",
+      "priority": "P1 - Alta",
+      "start": "2027-01-01",
+      "target": "2027-01-31",
+      "labels": ["type:initiative", "area:observability", "horizon:later"],
+      "epics": [
+        {
+          "key": "EPIC-4.1",
+          "title": "EPIC-4.1 · Observabilidad",
+          "description": "Trazas, logs y métricas de ejecuciones.",
+          "priority": "P1 - Alta",
+          "labels": ["type:epic", "area:observability"],
+          "stories": [
+            {
+              "key": "US-4.1.1",
+              "title": "US-4.1.1 · Trazas y logs estructurados",
+              "as_a": "operador",
+              "i_want": "trazas por ejecución",
+              "so_that": "diagnostique problemas",
+              "priority": "P1 - Alta",
+              "estimate": 5,
+              "labels": ["type:story", "area:observability"],
+              "acceptance": ["Logs estructurados", "Correlación por ejecución", "Búsqueda"]
+            },
+            {
+              "key": "US-4.1.2",
+              "title": "US-4.1.2 · Métricas y alertas",
+              "as_a": "operador",
+              "i_want": "métricas y alertas",
+              "so_that": "detecte fallos proactivamente",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:observability"],
+              "acceptance": ["Dashboard", "Umbrales", "Notificaciones"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-4.2",
+          "title": "EPIC-4.2 · Seguridad y cumplimiento",
+          "description": "Gestionar secretos y auditar accesos.",
+          "priority": "P1 - Alta",
+          "labels": ["type:epic", "area:security"],
+          "stories": [
+            {
+              "key": "US-4.2.1",
+              "title": "US-4.2.1 · Gestión de secretos",
+              "as_a": "propietario",
+              "i_want": "almacenar credenciales de forma segura",
+              "so_that": "no se filtren",
+              "priority": "P0 - Crítica",
+              "estimate": 5,
+              "labels": ["type:story", "area:security"],
+              "acceptance": ["Cifrado en reposo", "Rotación", "Sin secretos en logs"]
+            },
+            {
+              "key": "US-4.2.2",
+              "title": "US-4.2.2 · Auditoría de ejecuciones",
+              "as_a": "propietario",
+              "i_want": "registrar quién hizo qué",
+              "so_that": "haya trazabilidad",
+              "priority": "P2 - Media",
+              "estimate": 3,
+              "labels": ["type:story", "area:security"],
+              "acceptance": ["Registro de acciones", "Retención", "Exportable"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-4.3",
+          "title": "EPIC-4.3 · Testing",
+          "description": "Estrategia de pruebas del sistema.",
+          "priority": "P2 - Media",
+          "labels": ["type:epic", "area:observability"],
+          "stories": [
+            {
+              "key": "US-4.3.1",
+              "title": "US-4.3.1 · Estrategia de pruebas",
+              "as_a": "desarrollador",
+              "i_want": "pirámide de tests definida",
+              "so_that": "haya cobertura útil",
+              "priority": "P2 - Media",
+              "estimate": 3,
+              "labels": ["type:story", "area:observability"],
+              "acceptance": ["Unit/integration/e2e", "Cobertura objetivo", "CI integrada"]
+            },
+            {
+              "key": "US-4.3.2",
+              "title": "US-4.3.2 · Datos sintéticos y mocks",
+              "as_a": "desarrollador",
+              "i_want": "generar datos y mocks de LLM",
+              "so_that": "pruebe sin coste ni aleatoriedad",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:observability"],
+              "acceptance": ["Generador de datos", "Mocks de proveedores", "Tests deterministas"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "INIT-5",
+      "title": "INIT-5 · Producto y Adopción",
+      "description": "Convertir la plataforma en un producto usable y documentado.",
+      "milestone": "M4",
+      "horizon": "Después",
+      "priority": "P2 - Media",
+      "start": "2027-02-01",
+      "target": "2027-03-31",
+      "labels": ["type:initiative", "area:product", "horizon:later"],
+      "epics": [
+        {
+          "key": "EPIC-5.1",
+          "title": "EPIC-5.1 · Experiencia de usuario",
+          "description": "Panel y onboarding para gestionar automatizaciones.",
+          "priority": "P2 - Media",
+          "labels": ["type:epic", "area:product"],
+          "stories": [
+            {
+              "key": "US-5.1.1",
+              "title": "US-5.1.1 · Panel de control",
+              "as_a": "usuario",
+              "i_want": "ver el estado de mis automatizaciones",
+              "so_that": "gestione todo en un sitio",
+              "priority": "P2 - Media",
+              "estimate": 8,
+              "labels": ["type:story", "area:product"],
+              "acceptance": ["Listado de flujos", "Estado y últimas ejecuciones", "Acciones rápidas"]
+            },
+            {
+              "key": "US-5.1.2",
+              "title": "US-5.1.2 · Onboarding guiado",
+              "as_a": "usuario nuevo",
+              "i_want": "una guía para crear mi primera automatización",
+              "so_that": "obtenga valor rápido",
+              "priority": "P2 - Media",
+              "estimate": 5,
+              "labels": ["type:story", "area:product"],
+              "acceptance": ["Asistente paso a paso", "Plantilla inicial", "Ejemplo ejecutable"]
+            }
+          ]
+        },
+        {
+          "key": "EPIC-5.2",
+          "title": "EPIC-5.2 · Documentación y comunidad",
+          "description": "Documentar el producto y facilitar el aprendizaje.",
+          "priority": "P3 - Baja",
+          "labels": ["type:epic", "area:docs"],
+          "stories": [
+            {
+              "key": "US-5.2.1",
+              "title": "US-5.2.1 · Documentación de uso",
+              "as_a": "usuario",
+              "i_want": "documentación clara",
+              "so_that": "resuelva dudas solo",
+              "priority": "P3 - Baja",
+              "estimate": 5,
+              "labels": ["type:story", "area:docs"],
+              "acceptance": ["Guía de inicio", "Referencia de DSL", "FAQ"]
+            },
+            {
+              "key": "US-5.2.2",
+              "title": "US-5.2.2 · Guías y ejemplos",
+              "as_a": "usuario",
+              "i_want": "ejemplos de automatizaciones reales",
+              "so_that": "aprenda por imitación",
+              "priority": "P3 - Baja",
+              "estimate": 5,
+              "labels": ["type:story", "area:docs"],
+              "acceptance": ["Ejemplos por caso de uso", "Repos de ejemplo", "Vídeos/screenshots"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
