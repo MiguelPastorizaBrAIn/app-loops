@@ -1,0 +1,72 @@
+name: "3 · Historia de Usuario"
+description: "Valor concreto y verificable. Sub-issue de una Épica."
+title: "US-x.y.z · "
+labels: ["type:story"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Formato **Como / Quiero / Para** + criterios de aceptación.
+        Enlázala como sub-issue de su Épica.
+  - type: input
+    id: epica
+    attributes:
+      label: Épica padre
+      placeholder: "EPIC-1.1 · Arquitectura y repositorio"
+    validations:
+      required: true
+  - type: input
+    id: como
+    attributes:
+      label: "Como (rol)"
+      placeholder: "desarrollador"
+    validations:
+      required: true
+  - type: input
+    id: quiero
+    attributes:
+      label: "Quiero (acción)"
+      placeholder: "una estructura de repositorio clara"
+    validations:
+      required: true
+  - type: input
+    id: para
+    attributes:
+      label: "Para (beneficio)"
+      placeholder: "añadir código sin fricción"
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      value: |
+        - [ ] Dado ... cuando ... entonces ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options:
+        - "P0 - Crítica"
+        - "P1 - Alta"
+        - "P2 - Media"
+        - "P3 - Baja"
+    validations:
+      required: true
+  - type: dropdown
+    id: esfuerzo
+    attributes:
+      label: Esfuerzo
+      options: ["XS", "S", "M", "L", "XL"]
+    validations:
+      required: true
+  - type: textarea
+    id: notas
+    attributes:
+      label: Notas técnicas
+      description: "Enlaces, decisiones, dependencias (opcional)."
+    validations:
+      required: false
