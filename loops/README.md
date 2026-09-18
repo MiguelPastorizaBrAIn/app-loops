@@ -1,55 +1,86 @@
-# Loops - Definición y Tipos
+# Loops - App Loops
 
-## ¿Qué es un Loop?
+## Índice de Loops
 
-Un **Loop** es un ciclo de trabajo que se repite hasta completar un objetivo. En el contexto de gestión de tareas y proyectos, un Loop representa un período de trabajo enfocado.
+### Loops Activos
+- [example-loop.json](example-loop.json) - Ejemplo de Loop
+
+## Cómo Crear un Nuevo Loop
+
+### Usando la Plantilla
+1. Copiar `templates/loop-template.json`
+2. Renombrar con el ID del Loop (ej: `loop-002.json`)
+3. Actualizar los campos según el Loop
+4. Guardar en este directorio
+
+### Campos de un Loop
+
+#### Información Básica
+- `loop_id`: Identificador único del Loop
+- `type`: Tipo de Loop (Task Loop, Project Loop, Review Loop)
+- `name`: Nombre del Loop
+- `description`: Descripción detallada
+- `start_date`: Fecha de inicio
+- `end_date`: Fecha de fin
+- `objective`: Objetivo específico del Loop
+
+#### Gestión
+- `tasks`: Lista de tareas asociadas
+- `status`: Estado del Loop
+- `created_at`: Fecha de creación
+- `updated_at`: Fecha de última actualización
+- `owner`: Propietario del Loop
+
+#### Métricas
+- `planned_hours`: Horas planificadas
+- `actual_hours`: Horas reales
+- `completion_percentage`: Porcentaje de completado
 
 ## Tipos de Loops
 
-### 1. Task Loop
+### Task Loop
 - **Duración**: 1-5 días
 - **Enfoque**: Completar una tarea específica
 - **Resultado**: Tarea completada
-- **Uso ideal**: Tareas bien definidas y acotadas
 
-### 2. Project Loop
+### Project Loop
 - **Duración**: 1-4 semanas
 - **Enfoque**: Avanzar en un proyecto completo
 - **Resultado**: Hito o fase del proyecto completada
-- **Uso ideal**: Proyectos con múltiples tareas
 
-### 3. Review Loop
+### Review Loop
 - **Duración**: 1 día
 - **Enfoque**: Revisar y ajustar el trabajo
 - **Resultado**: Optimización y mejora continua
-- **Uso ideal**: Revisiones diarias de progreso
 
-## Ciclo de un Loop
+## Estados de los Loops
 
-1. **Planificación**: Definir objetivos del Loop
-2. **Ejecución**: Trabajar en las tareas asignadas
-3. **Revisión**: Evaluar progreso y resultados
-4. **Ajuste**: Modificar plan según sea necesario
-5. **Cierre**: Documentar aprendizajes y resultados
-
-## Mejores Prácticas
-
-- Definir objetivos claros para cada Loop
-- Establecer métricas de éxito
-- Documentar bloqueos y soluciones
-- Realizar revisiones regulares
-- Mantener comunicación constante con el equipo
+- `planning`: En fase de planificación
+- `in_progress`: Loop en progreso
+- `completed`: Loop completado
+- `cancelled`: Loop cancelado
 
 ## Ejemplo de Uso
 
 ```json
 {
-  "loop_id": "loop-001",
-  "type": "Task Loop",
+  "loop_id": "loop-002",
+  "type": "Project Loop",
+  "name": "Desarrollo de Funcionalidad",
+  "description": "Loop para desarrollar una funcionalidad específica",
   "start_date": "2026-09-18",
-  "end_date": "2026-09-22",
-  "objective": "Completar la configuración inicial del proyecto",
-  "tasks": ["task-001", "task-002"],
-  "status": "in_progress"
+  "end_date": "2026-09-25",
+  "objective": "Completar el desarrollo de la funcionalidad X",
+  "tasks": ["task-002", "task-003"],
+  "status": "in_progress",
+  "created_at": "2026-09-18T10:00:00Z",
+  "updated_at": "2026-09-18T10:00:00Z",
+  "owner": "MiguelPastorizaBrAIn",
+  "metrics": {
+    "planned_hours": 40,
+    "actual_hours": 16,
+    "completion_percentage": 40
+  },
+  "notes": "Segundo Loop del proyecto"
 }
 ```
