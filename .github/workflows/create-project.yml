@@ -3,7 +3,7 @@ name: Setup GitHub Project
 # Crea/actualiza el Project del portfolio (Iniciativas, Epicas, Historias),
 # los milestones del roadmap y los campos personalizados.
 #
-# Requiere un PAT con scopes: repo, project.
+# Requiere un PAT CLASICO con scopes: repo, project.
 #   - Guardalo como secreto del repo con el nombre: PROJECT_TOKEN
 #     (Settings > Secrets and variables > Actions > New repository secret)
 #   - O pasalo manualmente en el input "token" al lanzar el workflow.
@@ -12,14 +12,9 @@ on:
   workflow_dispatch:
     inputs:
       token:
-        description: "PAT con scopes repo,project (opcional si existe el secreto PROJECT_TOKEN)"
+        description: "PAT clasico con scopes repo,project (opcional si existe el secreto PROJECT_TOKEN)"
         required: false
         type: string
-      dry_run:
-        description: "Solo mostrar lo que se haria (no aplica cambios)"
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
@@ -32,39 +27,60 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Comprobar jq
-        run: jq --version
+      - name: Diagnostico del token
+        env:
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          INPUT_TOKEN: ${{ inputs.token }}
+        run: |
+          set -uo pipefail
+          TOKEN="${INPUT_TOKEN:-${PROJECT_TOKEN:-}}"
+          {
+            echo "## Diagnostico"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -z "$TOKEN" ]; then
+            echo "- **Sin token.** Crea el secreto PROJECT_TOKEN o pasa el input 'token'." >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::No hay token configurado"
+            exit 1
+          fi
+          echo "- Longitud del token: ${#TOKEN}" >> "$GITHUB_STEP_SUMMARY"
+          HEADERS=$(curl -sI -H "Authorization: bearer $TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/user)
+          SCOPES=$(echo "$HEADERS" | grep -i '^x-oauth-scopes:' | tr -d '\r' | cut -d: -f2- | xargs || true)
+          ACCEPTED=$(echo "$HEADERS" | grep -i '^x-accepted-oauth-scopes:' | tr -d '\r' | cut -d: -f2- | xargs || true)
+          echo "- Scopes del token: \`${SCOPES:-<vacio>}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Scopes aceptados por la API: \`${ACCEPTED:-<vacio>}\`" >> "$GITHUB_STEP_SUMMARY"
+          if echo "$SCOPES" | grep -q 'project'; then
+            echo "- ✅ El token incluye el scope \`project\`." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- ⚠️ **El token NO incluye el scope \`project\`.** Los Projects v2 no se podran crear. Regenera un PAT CLASICO marcando \`repo\` y \`project\`." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Ejecutar setup del Project
         env:
           PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
           INPUT_TOKEN: ${{ inputs.token }}
-          DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          set -euo pipefail
+          set -uo pipefail
           TOKEN="${INPUT_TOKEN:-${PROJECT_TOKEN:-}}"
-          if [ -z "$TOKEN" ]; then
-            echo "::error::No hay token. Crea el secreto PROJECT_TOKEN o pasa el input 'token'."
-            exit 1
-          fi
           chmod +x scripts/setup-project.sh
-          ./scripts/setup-project.sh "$TOKEN"
+          set -o pipefail
+          ./scripts/setup-project.sh "$TOKEN" 2>&1 | tee "$RUNNER_TEMP/setup.log"
 
-      - name: Resumen
+      - name: Resultado (siempre visible)
         if: always()
         run: |
           {
-            echo "## Setup del GitHub Project"
             echo ""
-            echo "Si el paso anterior fue correcto, tu Project ya esta listo."
+            echo "## Salida del setup"
+            echo ""
+            echo '```'
+            cat "$RUNNER_TEMP/setup.log" 2>/dev/null || echo "(sin salida)"
+            echo '```'
             echo ""
             echo "### Vistas recomendadas"
-            echo "1. **Board** agrupado por \`Estado\`"
+            echo "1. **Board** agrupado por \`Estado\` (filtro \`horizon:\"Ahora\"\`)"
             echo "2. **Roadmap** con \`Inicio\` y \`Fecha objetivo\`"
             echo "3. **Table** agrupada por \`Tipo\`"
-            echo ""
-            echo "### Filtros utiles"
-            echo '- `horizon:"Ahora"`'
-            echo '- `priority:"P0 - Crítica"`'
-            echo '- `-tipo:"Historia de Usuario"` (solo estructura)'
+            echo "4. **Board Triage** agrupada por \`Prioridad\`"
           } >> "$GITHUB_STEP_SUMMARY"
