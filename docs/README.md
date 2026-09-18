@@ -35,3 +35,10 @@ La documentación está organizada en las siguientes categorías:
 Si encuentras errores o quieres mejorar la documentación, por favor:
 1. Abre un issue con la etiqueta "documentación"
 2. O envía un pull request con tus mejoras
+
+## Formato de Documentación
+
+- Usa Markdown para todo el contenido
+- Incluye ejemplos de código cuando sea relevante
+- Mantén la estructura consistente
+- Actualiza los índices cuando agregues nueva documentación
