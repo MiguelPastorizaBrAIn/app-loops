@@ -1,127 +1,70 @@
-name: Create GitHub Project
+name: Setup GitHub Project
+
+# Crea/actualiza el Project del portfolio (Iniciativas, Epicas, Historias),
+# los milestones del roadmap y los campos personalizados.
+#
+# Requiere un PAT con scopes: repo, project.
+#   - Guardalo como secreto del repo con el nombre: PROJECT_TOKEN
+#     (Settings > Secrets and variables > Actions > New repository secret)
+#   - O pasalo manualmente en el input "token" al lanzar el workflow.
 
 on:
   workflow_dispatch:
     inputs:
       token:
-        description: 'GitHub Token with project scope'
-        required: true
+        description: "PAT con scopes repo,project (opcional si existe el secreto PROJECT_TOKEN)"
+        required: false
+        type: string
+      dry_run:
+        description: "Solo mostrar lo que se haria (no aplica cambios)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
-  create-project:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get repository info
-        id: repo_info
-        run: |
-          REPO_OWNER="${{ github.repository_owner }}"
-          REPO_NAME="${{ github.event.repository.name }}"
-          echo "owner=$REPO_OWNER" >> $GITHUB_OUTPUT
-          echo "repo=$REPO_NAME" >> $GITHUB_OUTPUT
+      - name: Comprobar jq
+        run: jq --version
 
-      - name: Create GitHub Project
+      - name: Ejecutar setup del Project
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          INPUT_TOKEN: ${{ inputs.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          echo "Creating GitHub Project..."
-          
-          # Get owner node ID
-          OWNER_ID=$(curl -s -X GET "https://api.github.com/users/${{ github.repository_owner }}" | jq -r '.node_id')
-          echo "Owner ID: $OWNER_ID"
-          
-          # Create project using GraphQL
-          CREATE_PROJECT_QUERY='
-          mutation {
-            createProjectV2(
-              input: {
-                ownerId: "'$OWNER_ID'",
-                title: "App Loops Development",
-                shortDescription: "Sistema de gestión de tareas y proyectos basado en Loops",
-                readme: "# App Loops Development\n\nProyecto para el desarrollo del sistema de gestión de tareas y proyectos basado en Loops.\n\n## Objetivos\n- Configurar estructura del repositorio\n- Definir tipos de Loops\n- Crear plantillas reutilizables\n- Implementar automatización\n- Completar documentación"
-              }
-            ) {
-              projectV2 {
-                id
-                number
-                title
-                url
-              }
-            }
-          }'
-          
-          RESPONSE=$(curl -s -X POST "https://api.github.com/graphql" \
-            -H "Authorization: bearer $GITHUB_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\": $(echo "$CREATE_PROJECT_QUERY" | jq -Rs .)}")
-          
-          echo "$RESPONSE" | jq .
-          
-          PROJECT_ID=$(echo "$RESPONSE" | jq -r '.data.createProjectV2.projectV2.id')
-          PROJECT_URL=$(echo "$RESPONSE" | jq -r '.data.createProjectV2.projectV2.url')
-          
-          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_OUTPUT
-          echo "PROJECT_URL=$PROJECT_URL" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          TOKEN="${INPUT_TOKEN:-${PROJECT_TOKEN:-}}"
+          if [ -z "$TOKEN" ]; then
+            echo "::error::No hay token. Crea el secreto PROJECT_TOKEN o pasa el input 'token'."
+            exit 1
+          fi
+          chmod +x scripts/setup-project.sh
+          ./scripts/setup-project.sh "$TOKEN"
 
-      - name: Add issues to project
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Resumen
+        if: always()
         run: |
-          PROJECT_ID="${{ steps.create-project.outputs.PROJECT_ID }}"
-          
-          # Get issues
-          ISSUES=$(curl -s -X POST "https://api.github.com/graphql" \
-            -H "Authorization: bearer $GITHUB_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d '{"query": "{ repository(owner: \"MiguelPastorizaBrAIn\", name: \"app-loops\") { issues(first: 10, states: OPEN) { nodes { id number title } } } }"}')
-          
-          echo "Issues found:"
-          echo "$ISSUES" | jq -r '.data.repository.issues.nodes[] | "  #\(.number): \(.title)"'
-          
-          # Add each issue to project
-          for ISSUE_NUM in 1 2 3 4 5; do
-            ISSUE_ID=$(echo "$ISSUES" | jq -r ".data.repository.issues.nodes[] | select(.number == $ISSUE_NUM) | .id")
-            
-            if [ -n "$ISSUE_ID" ] && [ "$ISSUE_ID" != "null" ]; then
-              ADD_ITEM_QUERY='
-              mutation {
-                addProjectV2ItemById(
-                  input: {
-                    projectId: "'$PROJECT_ID'",
-                    contentId: "'$ISSUE_ID'"
-                  }
-                ) {
-                  item {
-                    id
-                  }
-                }
-              }'
-              
-              ADD_RESPONSE=$(curl -s -X POST "https://api.github.com/graphql" \
-                -H "Authorization: bearer $GITHUB_TOKEN" \
-                -H "Content-Type: application/json" \
-                -d "{\"query\": $(echo "$ADD_ITEM_QUERY" | jq -Rs .)}")
-              
-              ITEM_ID=$(echo "$ADD_RESPONSE" | jq -r '.data.addProjectV2ItemById.item.id')
-              
-              if [ "$ITEM_ID" != "null" ] && [ -n "$ITEM_ID" ]; then
-                echo "✓ Issue #$ISSUE_NUM added to project"
-              else
-                echo "✗ Failed to add issue #$ISSUE_NUM"
-              fi
-            fi
-          done
-
-      - name: Summary
-        run: |
-          echo "## 🎉 GitHub Project Created!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Project URL:** ${{ steps.create-project.outputs.PROJECT_URL }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Go to the project URL" >> $GITHUB_STEP_SUMMARY
-          echo '2. Click "+ Add view" → "Board"' >> $GITHUB_STEP_SUMMARY
-          echo "3. Create columns: Backlog, To Do, In Progress, Review, Done" >> $GITHUB_STEP_SUMMARY
-          echo "4. Move issues to appropriate columns" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "## Setup del GitHub Project"
+            echo ""
+            echo "Si el paso anterior fue correcto, tu Project ya esta listo."
+            echo ""
+            echo "### Vistas recomendadas"
+            echo "1. **Board** agrupado por \`Estado\`"
+            echo "2. **Roadmap** con \`Inicio\` y \`Fecha objetivo\`"
+            echo "3. **Table** agrupada por \`Tipo\`"
+            echo ""
+            echo "### Filtros utiles"
+            echo '- `horizon:"Ahora"`'
+            echo '- `priority:"P0 - Crítica"`'
+            echo '- `-tipo:"Historia de Usuario"` (solo estructura)'
+          } >> "$GITHUB_STEP_SUMMARY"
