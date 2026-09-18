@@ -25,10 +25,10 @@ API="https://api.github.com"
 GRAPHQL="$API/graphql"
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
-info(){ echo -e "${BLUE}$*${NC}"; }
-ok(){ echo -e "${GREEN}  ✓ $*${NC}"; }
-warn(){ echo -e "${YELLOW}  ! $*${NC}"; }
-err(){ echo -e "${RED}  ✗ $*${NC}"; }
+info(){ echo -e "${BLUE}$*${NC}" >&2; }
+ok(){ echo -e "${GREEN}  ✓ $*${NC}" >&2; }
+warn(){ echo -e "${YELLOW}  ! $*${NC}" >&2; }
+err(){ echo -e "${RED}  ✗ $*${NC}" >&2; }
 
 if [ -z "$TOKEN" ]; then
   err "Falta el token. Uso: $0 <TOKEN>  (scopes: repo, project)"
@@ -61,7 +61,8 @@ rest() {
 }
 
 gql() {
-  local query="$1" vars="${2:-{}}"
+  local query="$1" vars="${2:-}"
+  [ -z "$vars" ] && vars='{}'
   jq -n --arg q "$query" --argjson v "$vars" '{query:$q, variables:$v}' |
     curl -s -X POST "$GRAPHQL" \
       -H "Authorization: bearer $TOKEN" \
@@ -144,9 +145,8 @@ else
   warn "el token necesita scope 'project' para crear el project"
   CREATE_MUT='mutation($input:CreateProjectV2Input!){ createProjectV2(input:$input){ projectV2{ id number url } } }'
   README_MD="# ${PROJ_TITLE}\n\n${PROJ_DESC}\n\n## Estructura\n- Iniciativas (trimestre)\n- Epicas (2-4 semanas)\n- Historias de Usuario (dias)\n\n## Flujo\nBacklog -> Listo -> En progreso -> En revision -> Hecho"
-  VARS=$(jq -n --arg owner "$USER_NODE_ID" --arg repo "$REPO_NODE_ID" \
-    --arg title "$PROJ_TITLE" --arg desc "$PROJ_DESC" --arg readme "$README_MD" \
-    '{input:{ownerId:$owner,repositoryId:$repo,title:$title,shortDescription:$desc,readme:$readme}}')
+  VARS=$(jq -n --arg owner "$USER_NODE_ID" --arg repo "$REPO_NODE_ID" --arg title "$PROJ_TITLE" \
+    '{input:{ownerId:$owner,repositoryId:$repo,title:$title}}')
   CR=$(gql "$CREATE_MUT" "$VARS")
   PROJ_ID=$(echo "$CR" | jq -r '.data.createProjectV2.projectV2.id')
   PROJ_URL=$(echo "$CR" | jq -r '.data.createProjectV2.projectV2.url')
@@ -157,6 +157,8 @@ else
     exit 1
   fi
   ok "proyecto creado: $PROJ_URL"
+  UPD_MUT='mutation($input:UpdateProjectV2Input!){ updateProjectV2(input:$input){ projectV2{ id url } } }'
+  gql "$UPD_MUT" "$(jq -n --arg p "$PROJ_ID" --arg d "$PROJ_DESC" --arg r "$README_MD" '{input:{projectId:$p,shortDescription:$d,readme:$r}}')" >/dev/null 2>&1 || warn "no se pudo fijar descripcion/readme"
 fi
 
 # ---------------------------------------------------------------- fields ---
