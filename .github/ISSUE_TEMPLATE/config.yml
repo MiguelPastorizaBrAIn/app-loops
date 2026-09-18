@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Roadmap y estructura del Project
+    url: https://github.com/MiguelPastorizaBrAIn/app-loops/blob/main/roadmap/README.md
+    about: Cómo se organizan Iniciativas, Épicas e Historias.
+  - name: Guía del GitHub Project
+    url: https://github.com/MiguelPastorizaBrAIn/app-loops/blob/main/docs/PROJECT-STRUCTURE.md
+    about: Campos, vistas y rutina semanal.
