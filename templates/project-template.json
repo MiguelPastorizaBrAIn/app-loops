@@ -1,0 +1,22 @@
+{
+  "id": "project-XXX",
+  "name": "Nombre del Proyecto",
+  "description": "Descripción detallada del proyecto",
+  "status": "planning",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "updated_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "owner": "",
+  "members": [],
+  "tasks": [],
+  "loop_type": "Project Loop",
+  "milestones": [],
+  "tags": [],
+  "budget": {
+    "estimated": 0,
+    "actual": 0
+  },
+  "timeline": {
+    "start_date": "YYYY-MM-DD",
+    "end_date": "YYYY-MM-DD"
+  }
+}
