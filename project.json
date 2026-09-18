@@ -1,0 +1,33 @@
+{
+  "name": "App Loops",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de tareas y proyectos basado en Loops",
+  "author": "Miguel Pastoriza",
+  "email": "Miguel.Pastoriza@brainpartners.ai",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MiguelPastorizaBrAIn/app-loops.git"
+  },
+  "scripts": {
+    "validate": "make validate",
+    "clean": "make clean",
+    "list-tasks": "make list-tasks",
+    "list-projects": "make list-projects"
+  },
+  "keywords": [
+    "loops",
+    "tasks",
+    "projects",
+    "management",
+    "workflow"
+  ],
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
