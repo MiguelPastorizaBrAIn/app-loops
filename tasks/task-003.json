@@ -1,0 +1,45 @@
+{
+  "id": "task-003",
+  "title": "Crear plantillas de tareas y proyectos",
+  "description": "Desarrollar las plantillas JSON para la creación estandarizada de tareas y proyectos",
+  "status": "completed",
+  "priority": "high",
+  "assignee": "MiguelPastorizaBrAIn",
+  "created_at": "2026-09-18T10:00:00Z",
+  "updated_at": "2026-09-18T10:15:00Z",
+  "completed_at": "2026-09-18T10:15:00Z",
+  "tags": ["plantillas", "estandarización"],
+  "loop_type": "Task Loop",
+  "project_id": "project-001",
+  "milestone_id": "milestone-002",
+  "subtasks": [
+    {
+      "id": "subtask-003-1",
+      "title": "Crear plantilla de tareas",
+      "completed": true,
+      "completed_at": "2026-09-18T10:11:00Z"
+    },
+    {
+      "id": "subtask-003-2",
+      "title": "Crear plantilla de proyectos",
+      "completed": true,
+      "completed_at": "2026-09-18T10:12:00Z"
+    },
+    {
+      "id": "subtask-003-3",
+      "title": "Crear plantilla de Loops",
+      "completed": true,
+      "completed_at": "2026-09-18T10:13:00Z"
+    },
+    {
+      "id": "subtask-003-4",
+      "title": "Validar estructura JSON",
+      "completed": true,
+      "completed_at": "2026-09-18T10:14:00Z"
+    }
+  ],
+  "dependencies": ["task-002"],
+  "estimated_hours": 4,
+  "actual_hours": 3,
+  "notes": "Plantillas creadas: task-template.json, project-template.json, loop-template.json"
+}
