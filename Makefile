@@ -1,37 +1,47 @@
-.PHONY: help create-task create-project list-tasks list-projects
+.PHONY: help create-task create-project create-loop list-tasks list-projects list-loops status validate clean
 
 help:
-	@echo "Comandos disponibles:"
-	@echo "  make create-task    - Crear una nueva tarea"
-	@echo "  make create-project - Crear un nuevo proyecto"
-	@echo "  make list-tasks     - Listar todas las tareas"
-	@echo "  make list-projects  - Listar todos los proyectos"
-	@echo "  make validate       - Validar archivos JSON"
+	@echo "App Loops - Comandos Disponibles:"
+	@echo ""
+	@echo "  make create-task     - Crear una nueva tarea"
+	@echo "  make create-project  - Crear un nuevo proyecto"
+	@echo "  make create-loop     - Crear un nuevo Loop"
+	@echo "  make list-tasks      - Listar todas las tareas"
+	@echo "  make list-projects   - Listar todos los proyectos"
+	@echo "  make list-loops      - Listar todos los Loops"
+	@echo "  make status          - Mostrar estado del proyecto"
+	@echo "  make validate        - Validar archivos JSON"
+	@echo "  make clean           - Limpiar archivos temporales"
+	@echo "  make help            - Mostrar esta ayuda"
+	@echo ""
 
 create-task:
-	@echo "Para crear una tarea, copia templates/task-template.json a tasks/ y renómbralo"
+	@./scripts/task-manager.sh create-task "$(name)"
 
 create-project:
-	@echo "Para crear un proyecto, copia templates/project-template.json a projects/ y renómbralo"
+	@./scripts/task-manager.sh create-project "$(name)"
+
+create-loop:
+	@./scripts/task-manager.sh create-loop "$(name)"
 
 list-tasks:
-	@ls -la tasks/
+	@./scripts/task-manager.sh list-tasks
 
 list-projects:
-	@ls -la projects/
+	@./scripts/task-manager.sh list-projects
+
+list-loops:
+	@./scripts/task-manager.sh list-loops
+
+status:
+	@./scripts/task-manager.sh status
 
 validate:
-	@echo "Validando archivos JSON..."
-	@for file in tasks/*.json projects/*.json config/*.json templates/*.json; do \
-		if [ -f "$$file" ]; then \
-			echo "Validando $$file..."; \
-			python3 -m json.tool $$file > /dev/null || echo "Error en $$file"; \
-		fi \
-	done
-	@echo "Validación completada"
+	@./scripts/task-manager.sh validate
 
 clean:
 	@echo "Limpiando archivos temporales..."
 	@find . -name "*.tmp" -delete
 	@find . -name "*.temp" -delete
+	@find . -name "*~" -delete
 	@echo "Limpieza completada"
