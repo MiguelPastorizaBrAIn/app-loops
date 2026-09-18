@@ -1,0 +1,19 @@
+{
+  "id": "task-001",
+  "title": "Ejemplo de Tarea",
+  "description": "Esta es una tarea de ejemplo para el sistema de Loops",
+  "status": "pending",
+  "priority": "medium",
+  "assignee": "MiguelPastorizaBrAIn",
+  "created_at": "2026-09-18T09:52:00Z",
+  "updated_at": "2026-09-18T09:52:00Z",
+  "tags": ["ejemplo", "configuración"],
+  "loop_type": "Task Loop",
+  "subtasks": [
+    {
+      "id": "subtask-001",
+      "title": "Subtarea de ejemplo",
+      "completed": false
+    }
+  ]
+}
