@@ -1,0 +1,53 @@
+name: "2 · Épica"
+description: "Bloque entregable de 2-4 semanas. Sub-issue de una Iniciativa."
+title: "EPIC-x.y · "
+labels: ["type:epic"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Una **Épica** agrupa varias **Historias de Usuario**.
+        Enlázala como sub-issue de su Iniciativa.
+  - type: input
+    id: iniciativa
+    attributes:
+      label: Iniciativa padre
+      placeholder: "INIT-1 · Fundación de la Plataforma"
+    validations:
+      required: true
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción
+      placeholder: "Qué cubre esta épica y por qué importa."
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación de la épica
+      value: |
+        - [ ] Criterio 1
+        - [ ] Criterio 2
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options:
+        - "P0 - Crítica"
+        - "P1 - Alta"
+        - "P2 - Media"
+        - "P3 - Baja"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Al crearla
+      options:
+        - label: "Enlazar como sub-issue de la Iniciativa"
+          required: true
+        - label: "Crear al menos 2 Historias de Usuario hijas"
+          required: true
