@@ -69,3 +69,20 @@
   "actual_hours": 0
 }
 ```
+
+## Comandos Útiles
+
+### Listar Todas las Tareas
+```bash
+ls -la tasks/
+```
+
+### Validar Archivos JSON
+```bash
+make validate
+```
+
+### Buscar Tareas por Estado
+```bash
+grep -r '"status": "pending"' tasks/
+```
