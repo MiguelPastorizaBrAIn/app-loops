@@ -48,3 +48,23 @@
 
 ### Prioridades (solo tareas)
 - `low`, `medium`, `high`, `critical`
+
+## Ejemplo de Uso Rápido
+
+### Crear una Tarea
+```bash
+cp templates/task-template.json tasks/task-002.json
+# Editar tasks/task-002.json con los datos específicos
+```
+
+### Crear un Proyecto
+```bash
+cp templates/project-template.json projects/project-002.json
+# Editar projects/project-002.json con los datos específicos
+```
+
+### Crear un Loop
+```bash
+cp templates/loop-template.json loops/loop-002.json
+# Editar loops/loop-002.json con los datos específicos
+```
