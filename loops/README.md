@@ -84,3 +84,20 @@
   "notes": "Segundo Loop del proyecto"
 }
 ```
+
+## Comandos Útiles
+
+### Listar Todos los Loops
+```bash
+ls -la loops/
+```
+
+### Validar Archivos JSON
+```bash
+make validate
+```
+
+### Buscar Loops por Estado
+```bash
+grep -r '"status": "in_progress"' loops/
+```
