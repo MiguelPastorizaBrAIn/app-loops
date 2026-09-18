@@ -1,0 +1,37 @@
+{
+  "project": {
+    "name": "App Loops",
+    "description": "Sistema de gestión de tareas y proyectos basado en Loops",
+    "version": "1.0.0"
+  },
+  "loops": {
+    "definition": "Un Loop es un ciclo de trabajo que se repite hasta completar un objetivo",
+    "types": [
+      {
+        "name": "Task Loop",
+        "description": "Ciclo enfocado en completar tareas individuales"
+      },
+      {
+        "name": "Project Loop", 
+        "description": "Ciclo para gestionar proyectos completos con múltiples tareas"
+      },
+      {
+        "name": "Review Loop",
+        "description": "Ciclo de revisión y mejora continua"
+      }
+    ]
+  },
+  "tasks": {
+    "states": ["pending", "in_progress", "completed", "blocked"],
+    "priorities": ["low", "medium", "high", "critical"]
+  },
+  "projects": {
+    "states": ["planning", "active", "on_hold", "completed"],
+    "templates": [
+      {
+        "name": "Standard Project",
+        "description": "Plantilla estándar para proyectos"
+      }
+    ]
+  }
+}
