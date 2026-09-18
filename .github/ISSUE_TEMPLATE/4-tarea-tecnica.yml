@@ -1,0 +1,50 @@
+name: "4 · Tarea técnica / Spike"
+description: "Trabajo técnico o investigación. Sub-issue de una Historia o Épica."
+title: "TASK · "
+labels: ["type:task"]
+body:
+  - type: input
+    id: padre
+    attributes:
+      label: Elemento padre (opcional)
+      placeholder: "US-1.1.1 · Estructura del repositorio"
+    validations:
+      required: false
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción
+      placeholder: "Qué hay que hacer y por qué."
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Pasos
+      value: |
+        - [ ] Paso 1
+        - [ ] Paso 2
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options:
+        - "P0 - Crítica"
+        - "P1 - Alta"
+        - "P2 - Media"
+        - "P3 - Baja"
+    validations:
+      required: true
+  - type: dropdown
+    id: esfuerzo
+    attributes:
+      label: Esfuerzo
+      options: ["XS", "S", "M", "L", "XL"]
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        > ¿Es una investigación? Cambia el label a `type:spike`.
