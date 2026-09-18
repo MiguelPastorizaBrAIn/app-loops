@@ -77,3 +77,20 @@
   }
 }
 ```
+
+## Comandos Útiles
+
+### Listar Todos los Proyectos
+```bash
+ls -la projects/
+```
+
+### Validar Archivos JSON
+```bash
+make validate
+```
+
+### Buscar Proyectos por Estado
+```bash
+grep -r '"status": "active"' projects/
+```
