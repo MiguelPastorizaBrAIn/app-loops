@@ -1,0 +1,54 @@
+{
+  "id": "task-005",
+  "title": "Completar documentación del proyecto",
+  "description": "Crear toda la documentación necesaria para el uso y comprensión del sistema",
+  "status": "in_progress",
+  "priority": "medium",
+  "assignee": "MiguelPastorizaBrAIn",
+  "created_at": "2026-09-18T10:00:00Z",
+  "updated_at": "2026-09-18T11:30:00Z",
+  "tags": ["documentación", "comunicación"],
+  "loop_type": "Task Loop",
+  "project_id": "project-001",
+  "milestone_id": "milestone-004",
+  "subtasks": [
+    {
+      "id": "subtask-005-1",
+      "title": "Crear README principal",
+      "completed": true,
+      "completed_at": "2026-09-18T10:05:00Z"
+    },
+    {
+      "id": "subtask-005-2",
+      "title": "Crear guía rápida",
+      "completed": true,
+      "completed_at": "2026-09-18T10:15:00Z"
+    },
+    {
+      "id": "subtask-005-3",
+      "title": "Documentar flujo de Loops",
+      "completed": true,
+      "completed_at": "2026-09-18T10:20:00Z"
+    },
+    {
+      "id": "subtask-005-4",
+      "title": "Crear guía de contribución",
+      "completed": true,
+      "completed_at": "2026-09-18T10:30:00Z"
+    },
+    {
+      "id": "subtask-005-5",
+      "title": "Documentar cada directorio",
+      "completed": false
+    },
+    {
+      "id": "subtask-005-6",
+      "title": "Crear ejemplos prácticos",
+      "completed": false
+    }
+  ],
+  "dependencies": ["task-001", "task-002", "task-003"],
+  "estimated_hours": 5,
+  "actual_hours": 3,
+  "notes": "Documentación parcial completada. Faltan READMEs de directorios y ejemplos"
+}
