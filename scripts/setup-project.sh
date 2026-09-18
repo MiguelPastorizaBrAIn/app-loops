@@ -99,7 +99,9 @@ while IFS= read -r row; do
   color=$(echo "$row" | jq -r .color)
   desc=$(echo "$row" | jq -r '.description // ""')
   if grep -qxF "$name" "$TMP/label_names.txt" 2>/dev/null; then
-    ok "label existe: $name"
+    rest PATCH "/repos/$OWNER/$REPO/labels/$name" \
+      "$(jq -n --arg n "$name" --arg c "$color" --arg d "$desc" '{new_name:$n,color:$c,description:$d}')" >/dev/null
+    ok "label actualizado: $name"
   else
     rest POST "/repos/$OWNER/$REPO/labels" \
       "$(jq -n --arg n "$name" --arg c "$color" --arg d "$desc" '{name:$n,color:$c,description:$d}')" >/dev/null
@@ -187,18 +189,15 @@ create_field() {
   fi
 }
 
-# Tipo, Estado, Prioridad, Horizonte, Esfuerzo (single select)
 for key in tipo estado prioridad horizonte esfuerzo; do
   name=$(jq -r --arg k "$key" '.fields[$k].name' "$BACKLOG")
   opts=$(jq -c --arg k "$key" '[.fields[$k].options[] | {name:.name,color:.color,description:""}]' "$BACKLOG")
   create_field "$name" "SINGLE_SELECT" "$opts"
 done
-# Iniciativa (text) + fechas
 create_field "$(jq -r '.fields.iniciativa.name' "$BACKLOG")" "TEXT" "[]"
 create_field "$(jq -r '.fields.inicio.name' "$BACKLOG")" "DATE" "[]"
 create_field "$(jq -r '.fields.objetivo.name' "$BACKLOG")" "DATE" "[]"
 
-# refrescar fields
 FIELDS_RESP=$(gql "$FIELDS_QUERY" "$(jq -n --arg id "$PROJ_ID" '{id:$id}')")
 echo "$FIELDS_RESP" | jq '[.data.node.fields.nodes[] | {name, id, options: (.options // [])}]' > "$TMP/fields.json"
 
@@ -219,9 +218,8 @@ set_date(){ gql 'mutation($input:UpdateProjectV2ItemFieldValueInput!){ updatePro
 # ---------------------------------------------------------------- issues ---
 info "==> Issues y jerarquia"
 rest GET "/repos/$OWNER/$REPO/issues?state=all&per_page=100" > "$TMP/issues.json"
-echo '{}' > "$TMP/issue_map.json"
 
-ensure_issue() { # title body labels(JSON array) milestone_number -> prints "number id node_id"
+ensure_issue() { # title body labels(JSON array) milestone_number -> "number|id|node_id"
   local title="$1" body="$2" labels="$3" ms="$4"
   local num id node
   num=$(jq -r --arg t "$title" '.[]|select(.title==$t)|.number' "$TMP/issues.json" | head -1)
@@ -237,13 +235,12 @@ ensure_issue() { # title body labels(JSON array) milestone_number -> prints "num
     num=$(echo "$r" | jq -r .number); id=$(echo "$r" | jq -r .id); node=$(echo "$r" | jq -r .node_id)
     if [ "$num" = "null" ] || [ -z "$num" ]; then
       err "fallo creando issue: $title -> $(echo "$r" | jq -r '.message // .')"
-      num=""; id=""; node=""
-    else
-      ok "issue creado: $title (#$num)"
+      echo "||"; return 0
     fi
+    ok "issue creado: $title (#$num)"
   fi
-  jq --arg t "$title" --arg n "$num" --arg i "$id" --arg nd "$node" \
-    '.[$t]={number:$n,id:$i,node_id:$nd}' "$TMP/issue_map.json" > "$TMP/issue_map.tmp" && mv "$TMP/issue_map.tmp" "$TMP/issue_map.json"
+  # asegurar labels
+  rest PUT "/repos/$OWNER/$REPO/issues/$num/labels" "$(jq -n --argjson l "$labels" '{labels:$l}')" >/dev/null 2>&1 || true
   echo "$num|$id|$node"
 }
 
@@ -262,7 +259,6 @@ priority_label(){ case "$1" in "P0"*) echo "priority:P0";; "P1"*) echo "priority
 priority_opt(){ case "$1" in "P0"*) echo "P0 - Crítica";; "P1"*) echo "P1 - Alta";; "P2"*) echo "P2 - Media";; "P3"*) echo "P3 - Baja";; *) echo "P2 - Media";; esac; }
 effort_opt(){ local n="$1"; if [ "$n" -le 2 ]; then echo XS; elif [ "$n" -le 3 ]; then echo S; elif [ "$n" -le 5 ]; then echo M; elif [ "$n" -le 8 ]; then echo L; else echo XL; fi; }
 
-# ---- Iniciativas ----
 for i in $(seq 0 $(( $(jq '.initiatives|length' "$BACKLOG") - 1 ))); do
   init=$(jq -c ".initiatives[$i]" "$BACKLOG")
   it=$(echo "$init" | jq -r .title)
@@ -292,7 +288,6 @@ for i in $(seq 0 $(( $(jq '.initiatives|length' "$BACKLOG") - 1 ))); do
     set_date "$F_OBJ" "$item" "$itarget"
   }
 
-  # ---- Epicas ----
   ne=$(echo "$init" | jq '.epics|length')
   for e in $(seq 0 $(( ne - 1 ))); do
     epic=$(echo "$init" | jq -c ".epics[$e]")
@@ -315,7 +310,6 @@ for i in $(seq 0 $(( $(jq '.initiatives|length' "$BACKLOG") - 1 ))); do
       set_date "$F_OBJ" "$eitem" "$itarget"
     }
 
-    # ---- Historias de Usuario ----
     ns=$(echo "$epic" | jq '.stories|length')
     for s in $(seq 0 $(( ns - 1 ))); do
       st=$(echo "$epic" | jq -c ".stories[$s]")
@@ -352,7 +346,7 @@ echo ""
 echo -e "${YELLOW}Recomendado (una vez):${NC}"
 echo "  1. En el Project, crea una vista Board agrupada por 'Estado'."
 echo "  2. Crea una vista Roadmap con fechas 'Inicio' y 'Fecha objetivo'."
-echo "  3. Crea una vista Table agrupada por 'Tipo' (Iniciativa/Épica/Historia)."
+echo "  3. Crea una vista Table agrupada por 'Tipo'."
 echo "  4. Filtros utiles:"
 echo "       horizon:\"Ahora\"        -> foco de la semana"
 echo "       priority:\"P0 - Crítica\" -> lo urgente"
